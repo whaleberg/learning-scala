@@ -10,43 +10,8 @@ import scala.swing.Action
 
 object DrawingWindow extends SimpleSwingApplication {
 
-lazy val ui = new Panel {
-		background = Color.white
-				preferredSize = (400,200)
-
-				focusable = true
-				listenTo(mouse.clicks, mouse.moves, keys)
-
-		reactions += {
-		case e: MousePressed  =>
-		moveTo(e.point)
-		requestFocusInWindow()
-		case e: MouseDragged  => lineTo(e.point)
-		case e: MouseReleased => lineTo(e.point)
-		case e: ButtonClicked => 
-		path = new geom.GeneralPath
-		repaint()
-		case KeyTyped(_,'c',_,_) =>
-		path = new geom.GeneralPath
-		repaint()
-		case _: FocusLost => repaint()
-		}
-
-		/* records the dragging */
-		var path = new geom.GeneralPath
-
-		def lineTo(p: Point) { path.lineTo(p.x, p.y); repaint() }
-		def moveTo(p: Point) { path.moveTo(p.x, p.y); repaint() }
-
-		override def paintComponent(g: Graphics2D) = {
-			super.paintComponent(g)
-			g.setColor(new Color(100,100,100))
-			g.drawString("Press left mouse button and drag to paint." +
-					(if(hasFocus) " Press 'c' to clear." else ""), 10, size.height-10)
-					g.setColor(Color.black)
-					g.draw(path)
-		}
-	}
+lazy val ui = new PathPanel()
+lazy val ui2 = new PathPanel()
   
   
 	val quitAction = new Action("Quit"){
@@ -77,6 +42,7 @@ lazy val ui = new Panel {
 			hGap = 3
 					vGap = 3
 					contents += ui
+					contents += ui2
 					contents += clearButton
 					contents += quitButton
 		}
