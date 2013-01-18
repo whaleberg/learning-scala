@@ -9,6 +9,7 @@ import scala.swing.GridPanel
 import scala.swing.Action
 import java.awt.Rectangle
 import java.awt.geom.Rectangle2D
+import whaleberg.test.ui.MapApp
 
 class PointsPanel extends Panel{
 
@@ -21,9 +22,12 @@ class PointsPanel extends Panel{
 	reactions += {
  
   	  case e: MouseDragged =>
-  	    endSelect = e.point
-  	    selected = getContained(pointsToRect(startSelect, endSelect))
-  	    repaint()
+  	    if(selecting){
+  	    	endSelect = e.point
+  	    	selected.clear()
+  	    	selected.appendAll(getContained(pointsToRect(startSelect, endSelect)))
+  	    	MapApp.update()
+  	    }
   	  case e: MousePressed =>
 	 
 		if (e.peer.getButton == java.awt.event.MouseEvent.BUTTON1){
@@ -34,20 +38,21 @@ class PointsPanel extends Panel{
 			endSelect = e.point
 			rightClicked(e.point)
 		}
-		requestFocusInWindow()
+		//requestFocusInWindow()
 	case e: MouseReleased =>
 		  selecting = false;
+		  repaint()
 		
 	case _: FocusLost => repaint()
 	}
 
 	def clearDrawing() { 
-  	 points = List()
+  	 points.clear()
 	  repaint()
 	}
 	
-	var selected : List[Point] = List()
-	var points : List[Point] = List()
+	val points = MapApp.points
+	val selected = MapApp.selection
 	var count = 0
 	var selecting = false
 	var startSelect : Point= null
@@ -55,11 +60,14 @@ class PointsPanel extends Panel{
 	
 	def clicked(p: Point){ 
 	  count += 1
-	  points = p :: points
-	  selected = List(p)
+	  points+= p
+	  selected.clear()
+	  selected.append(p)
+	  MapApp.update()
 	  repaint()
 	}
 	
+
 	def getContained(rect :Rectangle):List[Point]={
 	  var contained :List[Point] = List()
 	  for (p <- points){
@@ -84,7 +92,9 @@ class PointsPanel extends Panel{
 	
 
   	def rightClicked(p: Point){
-  	  selected = List(getClosest(p))
+  	  selected.clear()
+  	  selected.append(getClosest(p))
+  	  MapApp.update()
   	  repaint()
   	}
   	
@@ -93,10 +103,10 @@ class PointsPanel extends Panel{
 	}
 	
 	def pointsToRect(p1: Point , p2: Point):Rectangle = {
-		val x = Math.min(p1.x, p2.x)
-		val y = Math.min(p1.y, p2.y)
-		val width = Math.abs(p1.x-p2.x)
-		val height = Math.abs(p1.y-p2.y)
+		val x = scala.math.min(p1.x, p2.x)
+		val y = scala.math.min(p1.y, p2.y)
+		val width = scala.math.abs(p1.x-p2.x)
+		val height = scala.math.abs(p1.y-p2.y)
 		return new Rectangle(x,y,width, height)
 	}
 
