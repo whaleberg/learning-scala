@@ -11,7 +11,7 @@ import scala.swing.Action
 class PathPanel extends Panel {
 
 	background = Color.white
-	preferredSize = (400,200)
+	preferredSize = (600,200)
 
 	focusable = true
 	listenTo(mouse.clicks, mouse.moves)
