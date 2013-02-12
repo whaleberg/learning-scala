@@ -17,7 +17,7 @@ object MapApp extends SimpleSwingApplication {
 	  title = "MapApp Main Frame"
 	  contents = new GridPanel(1,2){
 
-		// contents += text;
+		  contents += text;
   		  contents += panel;
 		  
 	  }

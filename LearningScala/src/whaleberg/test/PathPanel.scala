@@ -11,10 +11,10 @@ import scala.swing.Action
 class PathPanel extends Panel {
 
 	background = Color.white
-	preferredSize = (400,200)
+			preferredSize = (400,200)
 
-	focusable = true
-	listenTo(mouse.clicks, mouse.moves)
+			focusable = true
+			listenTo(mouse.clicks, mouse.moves)
 
 	reactions += {
 	case e: MousePressed  =>
@@ -28,15 +28,15 @@ class PathPanel extends Panel {
 	case _: FocusLost => repaint()
 	}
 
-	def clearDrawing() { 
-	  path = new geom.GeneralPath()
-	  repaint()
+	def clearDrawing() {
+		path = new geom.GeneralPath()
+		repaint()
 	}
-	
+
 	/* records the dragging */
 	var path = new geom.GeneralPath
 
-	def lineTo(p: Point) { path.lineTo(p.x, p.y); repaint() }
+			def lineTo(p: Point) { path.lineTo(p.x, p.y); repaint() }
 	def moveTo(p: Point) { path.moveTo(p.x, p.y); repaint() }
 
 	override def paintComponent(g: Graphics2D) = {
